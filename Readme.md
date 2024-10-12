@@ -33,8 +33,8 @@ cd Raceline-Optimization
 Then, set up your virtual environment. Conda is the recommended method.
 
 ```bash
-conda create --name raceline python=3.8
-conda activate raceline
+virtualenv <name> #in your working dir
+source virtualenv_name/bin/activate
 ```
 
 Lots of the required functions for trajectory planning are cumulated in the trajectory planning helpers repository.
@@ -48,11 +48,10 @@ pip install -r requirements.txt
 
 # Steps
 
-### For `slam_toolbox`
-If you generated the map through `slam_toolbox`, consult https://stevengong.co/notes/Raceline-Optimization.
-You might need to photoshop the map first to remove any artifacts and have clear track boundaries.
+### For `Getting the raceline`
+First remove the noise from the img, using photoshop.
 
-First, run `map_converter.ipynb`, and then run `sanity_check.ipynb` to make sure the line generated is correct.
+Then, run `map_converter.ipynb`, and then run `sanity_check.ipynb` to make sure the line generated is correct.
 
 This will export a `.csv` file of the map to `inputs/tracks`.
 
@@ -73,12 +72,6 @@ python3 main_globaltraj_f110.py --map_name e7_floor5_square --map_path ~/workspa
 ```
 
 The code is developed with Ubuntu 20.04 LTS and Python 3.8.
-
-### Solutions for possible installation problems (Windows)
-* `cvxpy`, `cython` or any other package requires a `Visual C++ compiler` -> Download the build tools for Visual Studio
-2019 (https://visualstudio.microsoft.com/de/downloads/ -> tools for Visual Studio 2019 -> build tools), install them and
-chose the `C++ build tools` option to install the required C++ compiler and its dependencies
-* Problems with quadprog -> reason currently not clear, test using quadprog in version 0.1.6 instead 0.1.7
 
 ### Solutions for possible installation problems (Ubuntu)
 * `matplotlib` requires `tkinter` -> can be solved by `sudo apt install python3-tk`
