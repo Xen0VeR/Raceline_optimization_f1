@@ -25,10 +25,6 @@ calculating the global race trajectory.
 # Getting Started
 
 First, clone the repository
-```bash
-git clone https://github.com/CL2-UWaterloo/Raceline-Optimization.git
-cd Raceline-Optimization
-```
 
 Then, set up your virtual environment. Conda is the recommended method.
 

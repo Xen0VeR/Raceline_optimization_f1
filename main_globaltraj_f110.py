@@ -1,8 +1,5 @@
-"""
-A modification of `main_globaltraj.py` to so that the csv generated can directly be used
-by the pure_pursuit node: https://github.com/CL2-UWaterloo/f1tenth_ws/tree/main/src/pure_pursuit
+# A modification of `main_globaltraj.py` outputs, x,y,speed as csv.
 
-"""
 import opt_mintime_traj
 import numpy as np
 import time
@@ -17,19 +14,10 @@ from datetime import datetime
 import argparse
 import shutil
 
-"""
-Created by:
-Steven Gong
-
-Documentation:
-This script has to be executed to generate an optimal trajectory based on a given reference track. Adapted for
-F1TENTH ROS code.
-"""
-
 
 # Create the parser and add arguments with defaults and explicit names
 parser = argparse.ArgumentParser(description='Generate optimal trajectory for F1TENTH racing.')
-parser.add_argument('--map_name', type=str, default='e7_floor5_square', help='Name of the map (default: e7_floor5_square)')
+parser.add_argument('--map_name', type=str, default='Budapest_map', help='Name of the map (default: Budapest_map)')
 parser.add_argument('--map_path', type=str, default='', help='Path to the map centerline (should be a .csv), defaults to inputs/tracks/<map_name>.csv')
 parser.add_argument('--export_path', type=str, default='', help='Path to copy from the filepath in the /outputs')
 
@@ -39,9 +27,6 @@ args = parser.parse_args()
 MAP_NAME = args.map_name
 MAP_PATH = args.map_path
 EXPORT_PATH = args.export_path
-
-# MAP_NAME = "hubble_small"
-# MAP_NAME = "Hockenheim_map"
 
 # ----------------------------------------------------------------------------------------------------------------------
 # USER INPUT -----------------------------------------------------------------------------------------------------------

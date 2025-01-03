@@ -1,7 +1,7 @@
-image: my_map.pgm
+image: meowmeow.pgm
 mode: trinary
-resolution: 0.01
-origin: [-3.9, -4.88, 0]
+resolution: 0.009
+origin: [-2.4, -6.59, 0]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.25

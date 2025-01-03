@@ -32,7 +32,7 @@ corresponding cells of the friction map with a default mue value.
 # bool_show_plots:        boolean which enables plotting of the reference line, the friction map and the corresponding
 #                         mue values
 
-track_name = "modena_2019"
+track_name = "my_map"
 initial_mue = 0.8
 cellwidth_m = 2.0
 inside_trackbound = 'right'
@@ -49,22 +49,28 @@ filename_tpadata = datetime_save + '_' + track_name + '_tpadata.json'
 
 # set paths
 path2module = os.path.dirname(os.path.abspath(__file__))
-path2reftrack_file = os.path.join(path2module, 'inputs', 'tracks', track_name + '.csv')
-path2tpamap_file = os.path.join(path2module, 'inputs', 'frictionmaps', filename_tpamap)
-path2tpadata_file = os.path.join(path2module, 'inputs', 'frictionmaps', filename_tpadata)
+path2reftrack_file = os.path.join(
+    path2module, 'inputs', 'tracks', track_name + '.csv')
+path2tpamap_file = os.path.join(
+    path2module, 'inputs', 'frictionmaps', filename_tpamap)
+path2tpadata_file = os.path.join(
+    path2module, 'inputs', 'frictionmaps', filename_tpadata)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # CALCULATE REFERENCE LINE ---------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 
 # read reference track file
-reftrack = frictionmap.src.reftrack_functions.load_reftrack(path2track=path2reftrack_file)
+reftrack = frictionmap.src.reftrack_functions.load_reftrack(
+    path2track=path2reftrack_file)
 
 # check whether reference line is closed (is the race track a circuit or not)
-bool_isclosed_refline = frictionmap.src.reftrack_functions.check_isclosed_refline(refline=reftrack[:, :2])
+bool_isclosed_refline = frictionmap.src.reftrack_functions.check_isclosed_refline(
+    refline=reftrack[:, :2])
 
 # calculate coordinates of the track boundaries
-reftrackbound_right, reftrackbound_left = frictionmap.src.reftrack_functions.calc_trackboundaries(reftrack=reftrack)
+reftrackbound_right, reftrackbound_left = frictionmap.src.reftrack_functions.calc_trackboundaries(
+    reftrack=reftrack)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # SAMPLE COORDINATES FOR FRICTION MAP ----------------------------------------------------------------------------------
@@ -87,7 +93,8 @@ else:
 
 # set a default distance which is added / subtracted from max / min reference line coordinate to ensure that whole
 # racetrack is covered during coordinate point sampling
-default_delta = int(math.ceil(np.amax(reftrack[:, 2]) + np.amax(reftrack[:, 3]) + 5.0))
+default_delta = int(
+    math.ceil(np.amax(reftrack[:, 2]) + np.amax(reftrack[:, 3]) + 5.0))
 
 # calculate necessary range to cover the whole racetrack with grid xyRange = [x_min, x_max, y_min, y_max]
 xyRange = [int(math.floor(np.amin(reftrack[:, 0]) - default_delta)),
@@ -107,7 +114,8 @@ coordinates = np.empty((size_array, 2))
 i_row = 0
 
 for x_coord in x_grid:
-    coordinates[i_row:i_row + y_grid.shape[0], 0] = np.full((y_grid.shape[0]), x_coord)
+    coordinates[i_row:i_row + y_grid.shape[0],
+                0] = np.full((y_grid.shape[0]), x_coord)
     coordinates[i_row:i_row + y_grid.shape[0], 1] = y_grid
     i_row += y_grid.shape[0]
 
@@ -117,14 +125,17 @@ dist_to_trackbound = cellwidth_m * 1.1
 # distinguish between a closed racetrack (circuit) and an "open" racetrack
 if bool_isclosed_refline:
     bool_isIn_rightBound = mplPath.Path(trackbound_outside).\
-        contains_points(coordinates, radius=(dist_to_trackbound * sign_trackbound))
+        contains_points(coordinates, radius=(
+            dist_to_trackbound * sign_trackbound))
     bool_isIn_leftBound = mplPath.Path(trackbound_inside).\
-        contains_points(coordinates, radius=-(dist_to_trackbound * sign_trackbound))
+        contains_points(coordinates, radius=-
+                        (dist_to_trackbound * sign_trackbound))
     bool_OnTrack = (bool_isIn_rightBound & ~bool_isIn_leftBound)
 
 else:
     trackbound = np.vstack((trackbound_inside, np.flipud(trackbound_outside)))
-    bool_OnTrack = mplPath.Path(trackbound).contains_points(coordinates, radius=-dist_to_trackbound)
+    bool_OnTrack = mplPath.Path(trackbound).contains_points(
+        coordinates, radius=-dist_to_trackbound)
 
 # generate the friction map with coordinates which are within the trackboundaries or within the defined range outside
 tpa_map = cKDTree(coordinates[bool_OnTrack])
@@ -140,9 +151,11 @@ timer_start = time.perf_counter()
 
 # create dictionary filled with default mue value (value as numpy array)
 tpamap_indices = tpa_map.indices
-tpa_data = dict(zip(tpamap_indices, np.full((tpamap_indices.shape[0], 1), initial_mue)))
+tpa_data = dict(zip(tpamap_indices, np.full(
+    (tpamap_indices.shape[0], 1), initial_mue)))
 
-print('INFO: Time elapsed for tpa_data dictionary building: {:.3f}s'.format(time.perf_counter() - timer_start))
+print('INFO: Time elapsed for tpa_data dictionary building: {:.3f}s'.format(
+    time.perf_counter() - timer_start))
 
 # save friction map (only grid) ('*_tpamap.csv')
 with open(path2tpamap_file, 'wb') as fh:
